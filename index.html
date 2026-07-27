@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Harley Hunt</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f4f4f4;
+      color: #222;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h1 {
+      margin-bottom: 6px;
+    }
+
+    .instructions {
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px;
+      margin-bottom: 20px;
+      border: 1px solid #999;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+
+    .result {
+      margin-bottom: 12px;
+      padding: 16px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+
+    .owned {
+      font-weight: bold;
+      color: green;
+    }
+
+    .not-owned {
+      font-weight: bold;
+      color: #b00020;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .empty-message {
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <h1>🃏 Harley Hunt</h1>
+
+    <div class="instructions">
+      Search the box number, figure name, or variant.
+      Sticker differences do not count as separate Pops.
+    </div>
+
+    <input
+      id="searchInput"
+      type="search"
+      placeholder="Example: 376, Black Light, Roller Derby"
+      aria-label="Search Harley Quinn Funko collection"
+    >
+
+    <div id="results"></div>
+  </main>
+
+  <script>
+    const collection = [
+      {
+        box: "34",
+        figure: "Harley Quinn",
+        variant: "Standard",
+        year: "2013",
+        owned: true
+      },
+      {
+        box: "34",
+        figure: "Harley Quinn",
+        variant: "Glow in the Dark",
+        year: "2013",
+        owned: true
+      },
+      {
+        box: "34",
+        figure: "Harley Quinn",
+        variant: "Metallic",
+        year: "2013",
+        owned: false
+      },
+      {
+        box: "307",
+        figure: "Harley Quinn Roller Derby",
+        variant: "Birds of Prey",
+        year: "2020",
+        owned: true
+      },
+      {
+        box: "371",
+        figure: "Harley Quinn Black Light",
+        variant: "Black Light",
+        year: "2021",
+        owned: true
+      },
+      {
+        box: "376",
+        figure: "Harley Quinn Imperial Palace",
+        variant: "Standard",
+        year: "2021",
+        owned: true
+      },
+      {
+        box: "376",
+        figure: "Harley Quinn Imperial Palace",
+        variant: "Metallic",
+        year: "2021",
+        owned: false
+      },
+      {
+        box: "376",
+        figure: "Harley Quinn Imperial Palace",
+        variant: "Black Light",
+        year: "2022",
+        owned: false
+      }
+    ];
+
+    const searchInput = document.getElementById("searchInput");
+    const results = document.getElementById("results");
+
+    function displayResults(searchText = "") {
+      const query = searchText.trim().toLowerCase();
+
+      const matches = collection.filter((item) => {
+        const searchableText = [
+          item.box,
+          item.figure,
+          item.variant,
+          item.year
+        ].join(" ").toLowerCase();
+
+        return searchableText.includes(query);
+      });
+
+      results.innerHTML = "";
+
+      if (matches.length === 0) {
+        results.innerHTML = `
+          <div class="empty-message">
+            No matching Harley Quinn Pop was found.
+          </div>
+        `;
+        return;
+      }
+
+      matches.forEach((item) => {
+        const card = document.createElement("article");
+        card.className = "result";
+
+        const statusClass = item.owned ? "owned" : "not-owned";
+        const statusText = item.owned
+          ? "✅ ALREADY OWNED"
+          : "❌ NOT OWNED";
+
+        card.innerHTML = `
+          <strong>#${item.box} — ${item.figure}</strong>
+          <p>Variant: ${item.variant}</p>
+          <p>Year: ${item.year}</p>
+          <p class="${statusClass}">${statusText}</p>
+        `;
+
+        results.appendChild(card);
+      });
+    }
+
+    searchInput.addEventListener("input", (event) => {
+      displayResults(event.target.value);
+    });
+
+    displayResults();
+  </script>
+</body>
+</html>
